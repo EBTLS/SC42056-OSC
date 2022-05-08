@@ -1,0 +1,241 @@
+\ifx \allfiles \undefined
+
+\documentclass[titlepage,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{eurosym}
+\usepackage[a4paper,text={170mm,257mm}]{geometry}
+
+
+
+\begin{document}
+
+\section{Question 1}
+
+\fi
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.3em}
+
+    \subsection{Quesiont1.(a)}
+        \subsubsection{Assumption}
+            A maximum linear programming problem was described in this question. We assume that:\\
+            \begin{enumerate}
+                \item We will install central air conditioner X, the number of which is x, and split-type air conditioner Y, the number of which is y. 
+                \item All air conditioners are installed at one time.
+                \item Although x and y are integer, we consider them as non-negative real number first.
+            \end{enumerate}
+    
+        \subsubsection{Analysis}
+            Apparently, there are two constrains, namely, budget constrains and amount constrains. \\
+            \begin{enumerate}
+                \item We can not install more than 12 air conditioners or install a negative number of air conditioners. 
+                \item Total budget for all installation is \euro $24000 + 300E1$, where $E1 = 9$.
+            \end{enumerate}
+            
+        \subsubsection{Model}
+            According to analysis above, we can formalize  this optimization problem, we have:
+            \begin{align}\label{1.1}
+            \begin{split}  
+                \max_{x,y} &\quad 4x + 2.5y \\
+                s.t.\qquad x + y &\leq 12 \\
+                3000x + 1500y &\leq 24000 + 300E1 \\
+                x,y &\geq 0 \\
+            \end{split}    
+            \end{align}      
+            Obviously, model above isn't a standard form of linear programming problem. The corresponding standard form is as follows:
+            \begin{align}\label{1.2}
+            \begin{split}  
+                -\min_{x,y,s_1,s_2} &\quad -4x - 2.5y \\
+                s.t.\qquad x + y + s_1 &= 12 \\
+                3000x + 1500y +s_2 &= 24000 + 300E1 \\
+                x,\,y,\:s_1,\,s_2 &= 0 \\
+            \end{split}    
+            \end{align}      
+            Formula \eqref{1.2} is a standard form of LP problem described in Question1.(a).
+
+        \subsection{Question1.(b)}
+            When solving problem in Question1.(a) by using MATLAB, we will use following function:
+            \begin{align}\label{1.3}
+            \begin{split}  
+                [x,val,flag] = linprog(c,A,b,&A_{eq},b_{eq},lb,ub,options)
+            \end{split}    
+            \end{align}    
+            Formula \eqref{1.3} represent solution of following questions:
+            \begin{align}\label{1.4}
+            \begin{split}  
+                \min_x &\quad fX\\
+                AX &\leq b\\
+                A_{eq}X &= b_{eq}\\
+                lb\leq X &\leq ub
+            \end{split}    
+            \end{align} 
+            In formula \eqref{1.3} $x$ represent the optimization of independent variable, $val$ represent the optimized outcome, $flag$ is a sign of whether the problem has a solution. When the $flag$ is 1, it means that the problem has an optimal solution. If the $flag$ is 0, the problem has no optimal solution.\\
+            We can easily tell that, in Question1.(b):
+            \[ f = \begin{bmatrix}\label{1.5}
+            -4&-2.5
+            \end{bmatrix}\]
+            \[ A = \begin{bmatrix}\label{1.6}
+            1&1\\
+            3000&1500
+            \end{bmatrix}\]
+            \[ b = \begin{bmatrix}\label{1.7}
+            12\\
+            24000+300E1
+            \end{bmatrix}\]
+            \[ lb = \begin{bmatrix}\label{1.8}
+            0&0
+            \end{bmatrix}\]
+            \[ ub = \begin{bmatrix}\label{1.9}
+            inf&inf
+            \end{bmatrix}\]
+            \begin{align}\label{1.10}
+                A_{eq} = b_{eq} = [\,]
+            \end{align} 
+            
+        \subsubsection{Solution}
+
+            MATLAB code, which is not shown here, will be uploaded as an attachment in the form of .m file. Without considering that the result should be integer, we should install 5.8 air conditioners X, and 6.2 air conditioners Y.
+
+            Taking integral constraints into consideration, installation plan $(x,y)=(5,7),(x,y)=(6,5),(x,y)=(6,6)$ should be calculated. $(x,y)=(5,7)$ obtain maximum power 37.5 kW, $(x,y)=(6,5)$ obtain power 36.5 kW and they all meet the other constraints. But $(x,y)=(6,6)$ break the budget constraints.
+
+
+        \subsubsection{Answer}
+
+            The final result is that we should install 5 air conditioners X, and 7 air conditioner Y, leading to a maximum power, which is 37.5 kW.
+
+            
+
+    \subsection{Question 1(c)}
+    
+        \subsubsection{Assumption}
+
+        For Question 1 (c), make the following assumptions:
+
+            \begin{enumerate}
+                \item Only the cost of maintenance and the cost of installation of air conditioners are considered.
+                \item \label{assumptions.q1c b 2} All budgets are not separated, and can be used flexibly after determining the service life.
+                \item After the durable time is pre-determined, the practical duration for using and maintenance these air conditioners should  be equal to the pre-determined durable time.
+            \end{enumerate}
+
+        \subsubsection{Analysis} \label{analysis.q1c b}
+        
+        According to assumption \ref{assumptions.q1c b 2}, after the service life is determined, part of the maintenance budget can also be used to install air conditioners. For $N$ years, the cost for installation and maintenance during $N$ years should be considered together as shown in the following formula.
+
+            \begin{equation}
+                \sum_{n=1}^N 3000x+1500y+C_x(n)x+C_y(n)y \leq 24000+300E_1+(4000+100E_1)N 
+            \end{equation}
+
+        $C_x(n)$ is the maintenance cost of year n for air conditioner X, $C_y(n)$ is the maintenance cost of year n for air conditioner Y.
+
+        \subsubsection{Model}
+
+        According to analysis \ref{analysis.q1c b}, the model of Question 1(c) can be made as following (for N years).
+        
+        \begin{equation}
+            \begin{aligned}      
+                \min_{x,y} & -(4x+2.5y)   \\
+                s.t. \quad x+y   & \leq  12 \\
+                \sum_{n=1}^N 3000x+1500y+C_x(n)x+C_y(n)y & \leq 24000+300E_1+(4000+100E_1)N \\
+                x,y & \geq 0   
+            \end{aligned}
+        \end{equation}
+        
+        \subsubsection{Solution}
+
+        Different durations lead to different amount of maintenance budget can be used as installation budget. We calculated the maximal value of different durable years separately and find the best one from them. 
+
+        
+        Based on formula in \ref{analysis.q1c b}, the corresponding parameters in MATLAB function \verb linprog ~are shown as follows:
+
+        $$
+        f=
+        \begin{bmatrix}
+            -4 & -2.5
+        \end{bmatrix}
+        $$
+        $$
+        A=
+        \begin{bmatrix}
+            1 & 1 \\
+            3000+ \sum_{n=1}^N C_x(n) & 1500+ \sum_{n=1}^N C_y(n) \\
+        \end{bmatrix} 
+        $$
+        $$
+        b=
+        \begin{bmatrix}
+            12 & 24000+300E_1+(4000+100E_1)N
+        \end{bmatrix}^T
+        $$
+        $$
+        lb=
+        \begin{bmatrix}
+            0 & 0
+        \end{bmatrix}^T
+        $$
+
+        For years ranging from 1 to 10, the installation plan and the maximum power are found as shown in the following table.
+
+        \begin{table}[H] 
+
+            \centering
+
+            \begin{tabular}{*{11}{c}}
+
+                \toprule
+                duration & 1 & 2 & 3 & 4 & 5  \\
+                \midrule
+                max power &     41.7069 &  44.0789 &   45.8932  & 46.5493 &  47.0043     \\
+                X amount &   7.8046  &  9.3860  & 10.5955  & 11.0329  & 11.3362    \\
+                y amount &   4.1954  &  2.6140  &  1.4045  &  0.9671  &  0.6638     \\
+                \bottomrule
+
+                \toprule
+                duration  & 6 & 7 & 8 & 9 & 10 \\
+                \midrule
+                max power   &    46.6992 &  45.8421  & 44.6238 &  43.1983 &  41.6791\\
+
+                X amount  &  11.1328   & 10.5614  & 9.7492  &  8.7989 &  7.7861    \\
+                y amount  &     0.8672  &  1.4386  &  2.2508 &   3.2011  &  4.2139    \\
+                \bottomrule
+
+            \end{tabular}
+
+            \caption{Results for different duration time (non-integrization)} \label{tables.10 years result}
+        \end{table}
+
+        Without considering the integral, The optimal choice duration is 5 year, with 11.3362 X type, 0.6638 Y type and maximum power 47.0043 (kW). The next step is to adjust this result to integer and check whether it is still the best plan.
+
+        Considering that the duration time is 5 years, calculate the power of $(x,y)=(11,0)$  $(x,y)=(11,1)$ and $(x,y)=(12,0)$. gives a maximal power 46.5 (kW). However, this value is lower than the maximum power of 4 and 6 years in the table \ref{tables.10 years result}. This means that the integer solution of 6 need to be tested extra to find the optimal solution. See the following table for the maximal power for durable years 4,5,6. 
+
+        \begin{table}[H]
+            \centering
+        
+            \begin{tabular}{c|ccc|ccc|ccc}
+                \hline
+                year  & \multicolumn{3}{c|}{4} & \multicolumn{3}{c|}{5} & \multicolumn{3}{c|}{6} \\ \hline
+                amount x    & 11    & 11   & 12  & 11     & 11   & 12     & 11     & 11   & 12     \\
+                amount y    & 0      & 1    & 0    & 0      & 1    & 0      & 0      & 1    & 0    \\
+                power    & 44   & 46.5   & 48 & 44   & 46.5   & 48   & 44   & 46.5   & 48    \\ \hline
+                whether feasible  & Y   & Y    & N & Y   & Y    & N      & Y      & Y    & N    \\ \hline
+            \end{tabular}
+
+            \caption{Results for integer points}
+
+        \end{table}
+
+        The results show that the maximum power of 11 air conditioner X and 1 air conditioner Y remains unchanged, which is 46.5 kW for durable years 4,5,6.        
+
+        \subsubsection{Answer}
+        \begin{enumerate}
+            \item The problem is hard to transform to a sinlge LP problem.
+            \item The durable years can be selected as 4,5,6, 11 air conditioner X and 1 air conditioner Y should be chosen and the maximum available power is 46.5kW.
+        \end{enumerate}
+                
+        
+\ifx \allfiles \undefined    
+\end{document}
+\fi

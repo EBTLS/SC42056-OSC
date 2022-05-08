@@ -1,0 +1,123 @@
+\documentclass[titlepage,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+
+
+
+\begin{document}
+
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0.5em}
+
+    \subsection{Question 1(c) B}
+    
+
+        \subsubsection{Assumption}
+
+        For Question 1(c), the following assumptions are made:
+
+            \begin{enumerate}
+                \item Only the cost of maintenance and the cost of installation of air conditioners are considered.
+                \item \label{Q1(c) B Assumptions 2} All the budget are not separated, and can be used flexibly after the durable years is determined. 
+                \item 
+            \end{enumerate}
+
+        \subsubsection{Analysis} \label{Q1(c) B Analysis}
+        
+        According to assumption \ref{Q1(c) B Assumptions 2}, part of the maintenance budget can also be used to install air conditioners after the durable years has been determined. 
+
+        Comparing with Question 1(c) A, the target keeps the same, but the constraints is changed. For $N$ years, the cost for installation and maintenance during $N$ years should be considered together as shown in the following equation.
+
+            \begin{equation}
+                \sum_{n=1}^N \quad (C_{m,x}(n)+3000)x+(C_{m,y}(n)+1500)y \leq 24000+300E_1+(4000+100E_1)N 
+            \end{equation}
+
+        \subsubsection{Model}
+
+        According to \ref{Q1(c) B Analysis}, the model of Question 1(c) can be made as following:
+
+        For N durable years:
+
+        \begin{equation}
+            \begin{aligned}
+             &\min_{x,y}  -(4x +2.5y) \\                 
+             & s.t.
+            \begin{cases}
+                \begin{aligned}
+                    x+y & \leq & 12 \\
+                    C_{inst}+\sum_{n=1}^N C_{m,x}(n)x+C_{m,y}(n)y & \leq & 24000+300E_1+(4000+100E_1)N \\
+                    x,y  & \geq & 0 \\
+                \end{aligned}
+            \end{cases}                
+            \end{aligned}
+        \end{equation}
+
+        
+
+        \subsubsection{Solution}
+
+        Different durations lead to different amount of maintenance budget can be used as installation budget, so the analysis to simplify the calculation in Question 1(c) A cannot be done anymore. We just calculate the maximal value for different durable years separately and find the optimal one from them. 
+
+        
+        Based on equation in, the corresponding parameters in MATLAB function \verb quadprog are shown as follows:
+
+        % $$
+
+        % $$
+
+        For years ranging from 1 to 10, the installation plan and the maximum power are found as shown in Table \par
+
+        \begin{table}
+
+            \centering
+
+            \caption{Results for different duration time (non-integrization)}
+            \begin{tabular}{*{11}{c}}
+
+                \toprule
+
+                duration & 1 & 2 & 3 & 4 & 5  \\
+
+                \midrule
+
+                max power & 40.6212 & 42.9515  & 44.8285 & 45.6772 & 46.4063   \\
+
+                X amount &  7.0808  & 8.6344  & 9.8857 & 10.4515 & 10.9375  \\
+
+                y amount &   4.9192  &  3.3656  &  2.1143  &  1.5485  & 1.0625   \\
+
+                \bottomrule
+
+                \toprule
+
+                duration  & 6 & 7 & 8 & 9 & 10 \\
+
+                \midrule
+
+                max power  & 46.3235 & 45.6208 & 44.4924 & 43.1050 & 41.5873 \\
+
+                X amount  & 10.8824 & 10.4139 & 9.6616 & 8.7367 & 7.7249 \\
+
+                y amount  & 1.1176 &  1.5861 & 2.3384 & 3.2633 & 4.2751 \\
+
+                \bottomrule
+
+
+            \end{tabular}
+        \end{table}
+
+        Without regard to integration, The optimal choice for duration time is 5 year, with 10.9376 X type, 1.0625 Y type and maximum power 46.4064 (kW). The next step is adjusting this result to integer and checking whether it is still the optimal answer.
+
+        
+        
+
+
+        \subsubsection{Answer}
+
+
+
+    
+\end{document}

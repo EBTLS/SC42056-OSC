@@ -1,0 +1,409 @@
+\ifx \allfiles \undefined
+
+\documentclass[titlepage,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{eurosym}
+\usepackage[a4paper]{geometry}
+
+
+
+\begin{document}
+
+\fi
+
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0.5em}
+
+    \subsection{Question 4}
+    
+
+        \subsubsection{Assumption}
+
+
+
+
+
+        \subsubsection{Analysis}
+
+        The model of this problem is clearly clarified in the problem document, so the main point is to transform this model to available matrix for MATLAB. Define the variable vector as follows:
+        $$
+        \vec{x_4}=
+        \begin{bmatrix}
+            \dot{q_{ac,1}} & \dot{q_{ac,2}} & \cdots &\dot{q_{ac,2160}} &T_{b,2} & T_{b,3} & \cdots & T_{b,2160}
+        \end{bmatrix} 
+        $$
+
+        Considering the unit of $\Phi_k$ is \euro/kWh and the unit of $\dot{q_{ac,k}}$ is kW, so $\Delta t$ in $\sum_{k=1}^N \Phi_k \dot{q_{ac,k}}$ should be $\Delta t = 1 (h)$.
+
+        There are two ways for finding the corresponding matrices $H$ and $C$ in the standard form of quadratic optimization problem.
+
+        \begin{enumerate}
+            \item Measure 1: from equation to matrices
+            \begin{equation}
+                \begin{aligned}
+                    \sum_{k=1}^N \Phi_k \dot{q_{ac,k}} \Delta t+(0.1+E_2/10)(T_{B,k}-T_{ref})^2 &= \sum_{k=1}^N \Phi_k \dot{q_{ac,k}}+\sum_{k=1}^N 1.4(T_k^2+T_{ref}^2-2T_r T_k) \\
+                    & =  \sum_{k=1}^N \Phi_k \dot{q_{ac,k}} -2.8 T_r T_k +\sum_{k=1}^N 1.4 T_{ref}^2 +\sum_{k=1}^N 1.4 T_k^2 \\
+                    & = \sum_{k=1}^N 1.4 T_{ref}^2+ C^T \vec{x_4} + \frac{1}{2}\vec{x_4}^T H \vec{x_4}
+                \end{aligned}
+            \end{equation}
+            
+            so,
+
+            \begin{equation}
+                \begin{aligned}
+                    C=
+                    [\underbrace{\Phi_1 ~ \cdots ~ \cdots ~ \Phi_{2160}}_{N} ~ \underbrace{-2.8 T_{ref} ~ \cdots ~ \cdots ~  -2.8 T_{ref}}_{N-1} ]^T \\
+                    H=
+                    \begin{array}{c@{\hspace{-5pt}}c}
+                        \overbrace{\hphantom{
+                        \begin{array}{ccc} 
+                            0 & \cdots & 0\\
+                            \vdots & \ddots & \vdots \\
+                            0 & \cdots & 0
+                        \end{array}}}^{\displaystyle N}~~
+                        \overbrace{\hphantom{
+                        \begin{array}{ccc}
+                            0 & \cdots & 0\\
+                            \vdots & \ddots & \vdots \\
+                            0 & \cdots & 0
+                        \end{array}}}^{\displaystyle N-1}&\\
+                        \left[
+                            \begin{array}{c|c} 
+                                \begin{array}{ccc} 
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0
+                                \end{array} & 
+                                \begin{array}{ccc}  
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0 
+                                \end{array}\\
+                                \hline
+                                \begin{matrix}  
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0
+                                \end{matrix} &
+                                \begin{matrix}  
+                                    2.8 & \cdots & 0\\ 
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 2.8 
+                                \end{matrix}
+                            \end{array}
+                        \right] &
+                        \begin{array}{l}
+                            \left.\vphantom{
+                                \begin{array}{c} 
+                                    1 \\
+                                    \vdots \\
+                                    1 
+                                \end{array}}
+                                \right\}
+                                N\\
+                            \left.\vphantom{
+                                \begin{array}{c} 
+                                    1 \\ 
+                                    \vdots \\
+                                    1 
+                                \end{array}}
+                                \right\}
+                                N-1
+                        \end{array}
+                    \end{array}
+                \end{aligned}
+            \end{equation}
+            
+            \item Measure 2: directly from matrices operation
+            \begin{equation}
+                \begin{aligned}
+                    \sum_{k=1}^N \Phi_k \dot{q_{ac,k}} \Delta t+(0.1+E_2/10)(T_{B,K}-T_{ref})^2 &= \sum_{k=1}^N \Phi_k \dot{q_{ac,k}}+\sum_{k=1}^N 1.4(T_k^2+T_{ref}^2-2T_r T_k) \\
+                    & =  (\sum_{k=1}^N \Phi_k \dot{q_{ac,k}}) -1.4(Ax-T_{mref})^T(Ax-T_{mref}) \\
+                    & = (\sum_{k=1}^N \Phi_k \dot{q_{ac,k}}) -1.4x^T A^T A X -1.4T_{mref}^T T_{mref} + 2.8 T_{mref}^T A x\\
+                    & = -2.8 T_{mref}^T T_{mref} + \Phi x  + 2.8 T_{mref}^T A x- 1.4^T A^T A X \\
+                \end{aligned}
+            \end{equation}
+
+            where:
+
+            \begin{equation}
+                \begin{aligned}
+                    \Phi & = 
+                    [\underbrace{\Phi_1 ~ \cdots ~ \cdots ~ \Phi_{2160}}_{N} ~ \underbrace{0 ~ \cdots ~ \cdots ~  0}_{N-1} ] \\
+                    T_{mref} & =
+                    [\underbrace{0 ~ \cdots ~ \cdots ~ a0}_{N} ~ \underbrace{T_{ref} ~ \cdots ~ \cdots ~  T_{ref}}_{N-1} ] \\
+                    A & =
+                    \begin{array}{c@{\hspace{-5pt}}c}
+                        \overbrace{\hphantom{
+                        \begin{array}{ccc} 
+                            0 & \cdots & 0\\
+                            \vdots & \ddots & \vdots \\
+                            0 & \cdots & 0
+                        \end{array}}}^{\displaystyle N}~~
+                        \overbrace{\hphantom{
+                        \begin{array}{ccc}
+                            0 & \cdots & 0\\
+                            \vdots & \ddots & \vdots \\
+                            0 & \cdots & 0
+                        \end{array}}}^{\displaystyle N-1}&\\
+                        \left[
+                            \begin{array}{c|c} 
+                                \begin{array}{ccc} 
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0
+                                \end{array} & 
+                                \begin{array}{ccc}  
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0 
+                                \end{array}\\
+                                \hline
+                                \begin{matrix}  
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0
+                                \end{matrix} &
+                                \begin{matrix}  
+                                    1 & \cdots & 0\\ 
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 1 
+                                \end{matrix}
+                            \end{array}
+                        \right] &
+                        \begin{array}{l}
+                            \left.\vphantom{
+                                \begin{array}{c} 
+                                    1 \\
+                                    \vdots \\
+                                    1 
+                                \end{array}}
+                                \right\}
+                                N\\
+                            \left.\vphantom{
+                                \begin{array}{c} 
+                                    1 \\ 
+                                    \vdots \\
+                                    1 
+                                \end{array}}
+                                \right\}
+                                N-1
+                        \end{array}
+                    \end{array}
+                \end{aligned}
+            \end{equation}
+
+            so,
+
+            \begin{equation}
+                \begin{aligned}
+                    C= 
+                    \Phi+2T_{mref}^T 
+                    =[\underbrace{\Phi_1 ~ \cdots ~ \cdots ~ \Phi_{2160}}_{N} ~ \underbrace{-2.8 T_{ref} ~ \cdots ~ \cdots ~  -2.8 T_{ref}}_{N-1} ]^T \\
+                    H=
+                    2 A^T A
+                    = 
+                    \begin{array}{c@{\hspace{-5pt}}c}
+                        \overbrace{\hphantom{
+                        \begin{array}{ccc} 
+                            0 & \cdots & 0\\
+                            \vdots & \ddots & \vdots \\
+                            0 & \cdots & 0
+                        \end{array}}}^{\displaystyle N}~~
+                        \overbrace{\hphantom{
+                        \begin{array}{ccc}
+                            0 & \cdots & 0\\
+                            \vdots & \ddots & \vdots \\
+                            0 & \cdots & 0
+                        \end{array}}}^{\displaystyle N-1}&\\
+                        \left[
+                            \begin{array}{c|c} 
+                                \begin{array}{ccc} 
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0
+                                \end{array} & 
+                                \begin{array}{ccc}  
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0 
+                                \end{array}\\
+                                \hline
+                                \begin{matrix}  
+                                    0 & \cdots & 0\\
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 0
+                                \end{matrix} &
+                                \begin{matrix}  
+                                    2.8 & \cdots & 0\\ 
+                                    \vdots & \ddots & \vdots \\
+                                    0 & \cdots & 2.8 
+                                \end{matrix}
+                            \end{array}
+                        \right] &
+                        \begin{array}{l}
+                            \left.\vphantom{
+                                \begin{array}{c} 
+                                    1 \\
+                                    \vdots \\
+                                    1 
+                                \end{array}}
+                                \right\}
+                                N\\
+                            \left.\vphantom{
+                                \begin{array}{c} 
+                                    1 \\ 
+                                    \vdots \\
+                                    1 
+                                \end{array}}
+                                \right\}
+                                N-1
+                        \end{array}
+                    \end{array}
+                \end{aligned}
+            \end{equation}
+            
+        \end{enumerate}
+
+        For constraints $A_{eq} x=b_{eq}$, the matrices are shown 
+
+        % \begin{equation}
+        %     \begin{aligned}
+        %         A_{eq}=
+        %         [
+        %         \underbrace{
+        %             \begin{matrix}
+        %                 -a_2 \Delta t & 0 & \codts & 0 \\
+        %                 0 & -a_2 \Delta t & \cdots & 0 \\
+        %                 \vdots & \vdots & \ddots & \vdots \\
+        %                 0 & \cdots & -a_2 \Delta t & 0 \\
+        %                 0 & \cdots & 0 & -a_2 \Delta t \\
+        %             \end{matrix}}_{N} ~ 
+        %         \underbrace{
+        %             \begin{matrix}
+        %                 0 \\
+        %                 0 \\
+        %                 \vdots \\
+        %                 0 \\
+        %                 0 \\
+        %             \end{matrix}
+        %             }_{1}
+        %         \underbrace{
+        %             \begin{matrix}
+        %                 1 & 0 & \cdots & 0 \\
+        %                 -(1-a_3 \Delta t) & 1 & \ddots & \vdots \\
+        %                 0 & \ddots & \ddots & \\
+        %                 \vdots & \ddots &  & \\
+        %                 0 & 0 & -(1-a_3 \Delta t)
+        %             \end{matrix}}_{N-1} ] \\
+        %     \end{aligned}
+        % \end{equation}
+
+        \subsubsection{Model}
+
+        The model has been clearly clarified in the problem document, here the model is explained using matrices. Because $1.4 T_{ref}^2$ is a constant in this problem,so it was ignored in the standard form, and will finally be added on after calculating with MATLAB.
+
+        \subsubsection{Solution}
+
+        Based on equations, the corresponding parameters in MATLAB function \verb quadprog ~are shown as follows:
+
+        \begin{equation}
+            \begin{aligned}
+                H=
+                \begin{array}{c@{\hspace{-5pt}}c}
+                    \overbrace{\hphantom{
+                    \begin{array}{ccc} 
+                        0 & \cdots & 0\\
+                        \vdots & \ddots & \vdots \\
+                        0 & \cdots & 0
+                    \end{array}}}^{\displaystyle N}~~
+                    \overbrace{\hphantom{
+                    \begin{array}{ccc}
+                        0 & \cdots & 0\\
+                        \vdots & \ddots & \vdots \\
+                        0 & \cdots & 0
+                    \end{array}}}^{\displaystyle N-1}&\\
+                    \left[
+                        \begin{array}{c|c} 
+                            \begin{array}{ccc} 
+                                0 & \cdots & 0\\
+                                \vdots & \ddots & \vdots \\
+                                0 & \cdots & 0
+                            \end{array} & 
+                            \begin{array}{ccc}  
+                                0 & \cdots & 0\\
+                                \vdots & \ddots & \vdots \\
+                                0 & \cdots & 0 
+                            \end{array}\\
+                            \hline
+                            \begin{matrix}  
+                                0 & \cdots & 0\\
+                                \vdots & \ddots & \vdots \\
+                                0 & \cdots & 0
+                            \end{matrix} &
+                            \begin{matrix}  
+                                2.8 & \cdots & 0\\ 
+                                \vdots & \ddots & \vdots \\
+                                0 & \cdots & 2.8 
+                            \end{matrix}
+                        \end{array}
+                    \right] &
+                    \begin{array}{l}
+                        \left.\vphantom{
+                            \begin{array}{c} 
+                                1 \\
+                                \vdots \\
+                                1 
+                            \end{array}}
+                            \right\}
+                            N\\
+                        \left.\vphantom{
+                            \begin{array}{c} 
+                                1 \\ 
+                                \vdots \\
+                                1 
+                            \end{array}}
+                            \right\}
+                            N-1
+                    \end{array}
+                \end{array} \\
+                f=
+                =[\underbrace{\Phi_1 ~ \cdots ~ \cdots ~ \Phi_{2160}}_{N} ~ \underbrace{-2.8 T_{ref} ~ \cdots ~ \cdots ~  -2.8 T_{ref}}_{N-1} ]^T  \\
+                % A_{eq}=
+                % b_{eq}=
+            \end{aligned}
+        \end{equation}
+        \begin{equation}
+            \begin{aligned}
+                lb(i)=
+                \begin{cases}
+                   0  & \text{i=1,...,N} \\
+                   15 & \text{i > 2160 and $ \dot{q_{occ,(i-2160)}} >0 $} \\
+                   -\inf & \text (others)
+                \end{cases} \\
+                ub(i)=
+                \begin{cases}
+                   \dot{q_{ac,max}}  & \text{i=1,...,N} \\
+                   28 & \text{i > 2160 and $ \dot{q_{occ,(i-2160)}} >0 $} \\
+                   \inf & \text (others)
+                \end{cases}
+            \end{aligned}
+        \end{equation}
+
+        Finally, the quadprog got the optimal answer, which obtain the minimal cost of \euro 20533.
+
+
+
+
+        \subsubsection{Answer}
+        1. The optimal cost for air-conditioning along the horizon of N(2160) steps is \euro 20533.
+
+
+
+\ifx \allfiles \undefined    
+\end{document}
+\fi

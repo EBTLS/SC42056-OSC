@@ -1,0 +1,163 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{eurosym}
+
+\title{OSC_A1}
+\author{liyiting.kemos }
+\date{October 2020}
+
+\begin{document}
+
+
+
+\section{Task1}
+    \subsection{Task1.(a)}
+        \subsubsection{Assumption}
+            A maximum linear programming problem was described in this question. We assume that:\\
+            \begin{enumerate}
+                \item We will install central air conditioner K, the number of which is x, and split-type air conditioner Y, the number of which is y. 
+                \item We only install air conditioners once.
+                \item Although x and y is integer, we consider them as non-negative real number first.
+            \end{enumerate}
+    
+        \subsubsection{Analysis}
+            We can easily find that there are two constrains, namely, budget constrains and amount constrains. \\
+            \begin{enumerate}
+                \item We can not install more than 12 air conditioners or install a negative number of air conditioners. 
+                \item Total budget for all installation is \euro $24000 + 300E1$, where $E1 = 9$.
+            \end{enumerate}
+            
+        \subsubsection{Model}
+            According to analysis above, we can formalize  this optimization problem, we have:
+            \begin{align}\label{1.1}
+            \begin{split}  
+                \max_{x,y} &\quad 4x + 2.5y \\
+                s.t.\qquad x + y &\leq 12 \\
+                3000x + 1500y &\leq 24000 + 300E1 \\
+                x,y &\geq 0 \\
+            \end{split}    
+            \end{align}      
+            Obviously, model above isn't a standard form of linear programming problem, we can transform it into standard form, and we have:
+            \begin{align}\label{1.2}
+            \begin{split}  
+                -\min_{x,y,s_1,s_2} &\quad -4x - 2.5y \\
+                s.t.\qquad x + y + s_1 &= 12 \\
+                3000x + 1500y +s_2 &= 24000 + 300E1 \\
+                x,\,y,\:s_1,\,s_2 &= 0 \\
+            \end{split}    
+            \end{align}      
+            Formula \eqref{1.2} is a standard form of LP problem described in Task1.(a).
+
+    \subsection{Task1.(b)}
+        When solving problem in Task1.(a) by using MATLAB, we will use following function:
+        \begin{align}\label{1.3}
+        \begin{split}  
+            [x,val,flag] = linprog(c,A,b,&Aeq,beq,lb,ub,options)
+        \end{split}    
+        \end{align}    
+        Formula \eqref{1.3} represent solution of following questions:
+        \begin{align}\label{1.4}
+        \begin{split}  
+            \min_x &\quad f*X\\
+            A*X &= b\\
+            Aeq*X &= beq\\
+            lb\leq X &\leq ub
+        \end{split}    
+        \end{align} 
+        In formula \eqref{1.3} $x$ represent the optimization of independent variable, $val$ represent the optimized outcome, $flag$ is a sign of whether the problem has a solution. When the $flag$ is 1, it means that the problem has an optimal solution. If the $flag$ is 0, the problem has no optimal solution.\\
+        We can easily tell that, in Task1.(b),:
+        \[ f = \begin{bmatrix}\label{1.5}
+        -4&-2.5
+        \end{bmatrix}\]
+        \[ A = \begin{bmatrix}\label{1.6}
+        1&1\\
+        3000&1500
+        \end{bmatrix}\]
+        \[ b = \begin{bmatrix}\label{1.7}
+        12\\
+        24000+300*E1
+        \end{bmatrix}\]
+        \[ lb = \begin{bmatrix}\label{1.8}
+        0&0
+        \end{bmatrix}\]
+        \[ ub = \begin{bmatrix}\label{1.9}
+        inf&inf
+        \end{bmatrix}\]
+        \begin{align}\label{1.10}
+            Aeq = beq = [\,]
+        \end{align} 
+        \subsubsection{Solution}
+            MATLAB code, which is not shown here, will be uploaded as an attachment in the form of .m file. The final result is we install 6 air conditioners $X$, and 6 air conditioners $Y$, which leads to a maximum power, which is 39$kW$
+            
+    
+    
+
+            
+
+
+
+\section{Task3}
+    \subsection{Analysis}
+        In order to have a more accurate indoor temperature discrete model, we want the finest coefficient of $a_1,a_2,a_3$. We can achieve that by minimizing the square of the error between real $T_{b,k+1}$ and estimation.\\
+        From 2.1.2, we can rewrite the formula:
+        \begin{align}\label{1.10}
+            \sum_{i=1}^N \:\{[(T_{b,k+1} - T_{b,K}) - \Delta t (a_1\dot{q_{solar,k}} + a_2(\dot{q_{occ,k}}+\dot{q_{ac,k}}-\dot{q_{vent,k}}) + a_3(T_{amb,k} - T_{b,k}) ]  \}
+        \end{align}
+        We set:
+        \begin{align}
+        \begin{split}
+            T &= (T_{b,k+1} - T_{b,K})\\
+            %
+            (\dot{q_{occ,k}}+\dot{q_{ac,k}}-\dot{q_{vent,k}}) &= (\dot{q_{sigma,k}})\\
+            %
+            T_{amb,k} - T_{b,k} &= T_{sigma,k}\\
+            %
+            (a_1\dot{q_{solar,k}} + a_2(\dot{q_{sigma,k}}) + a_3(T_{sigma,k}) &= 
+            \begin{bmatrix} \dot{q_{solar,k}}&\dot{q_{sigma,k}}&\dot{T_{sigma,k}} \end{bmatrix} 
+            \begin{bmatrix} a_1\\a_2\\a_3 \end{bmatrix}\\
+            %
+            \begin{bmatrix} \dot{q_{solar,k}}&\dot{q_{sigma,k}}&\dot{T_{sigma,k}} \end{bmatrix} &= 
+            \begin{bmatrix} \dot{q_k} \end{bmatrix}\\
+            %
+            \begin{bmatrix} a_1\\a_2\\a_3 \end{bmatrix} &= 
+            \begin{bmatrix} a \end{bmatrix}
+        \end{split}
+        \end{align}
+        We can rewrite \eqref{1.10} to:
+        \begin{align}
+        \begin{split}\label{1.11}
+            &\begin{bmatrix}T - \begin{bmatrix} \dot{q} \end{bmatrix} \begin{bmatrix} a \end{bmatrix} \end{bmatrix}^T 
+            \begin{bmatrix}T - \begin{bmatrix} \dot{q} \end{bmatrix} \begin{bmatrix} a \end{bmatrix} \end{bmatrix}\\
+            &= a^T \dot{q}^T \dot{q} a - 2T^T\dot{q}a + T^TT
+        \end{split}
+        \end{align}
+        
+    \subsection{Model}
+        This is a quadratic programming problem, standard form of a quadratic programming is:
+        \begin{align}
+        \begin{split}
+            \min_x &\quad \frac 12x^THx + c^Tx\\
+            Ax &= b\\
+            x &\geq 0
+        \end{split}
+        \end{align} 
+        For formula \eqref{1.11}, it is a standard form of quadratic programming problem, where:
+        \begin{align}
+        \begin{split}\label{1.11}
+            H &= 2 \dot{q}^T \dot{q}\\
+            c^T &= 2T^T\dot{q}
+        \end{split}
+        \end{align} 
+        
+    \subsection{solution}    
+        We can use function in MATLAB to solve it. Details of each matrix are store in MATLAB, as a result, we only show final result here:
+        \begin{align}
+        \begin{split}
+           a_1 &= 2.662\times10^{-6}\\
+           a_2 &= 1.056\times10^{-6}\\
+           a_3 &= 2.135\times10^{-6}      
+        \end{split}
+        \end{align}     
+        
+\end{document}

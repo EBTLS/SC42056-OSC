@@ -1,0 +1,71 @@
+\documentclass[titlepage,a4paper,12pt]{article}
+
+\usepackage{graphicx}
+\graphicspath{{img/}}
+
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{eurosym}
+\usepackage{listings}
+\usepackage{appendix}
+\usepackage[a4paper,text={170mm,257mm}]{geometry}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+
+\lstdefinestyle{MATLAB}{
+    language        =   MATLAB, 
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   
+    columns         =   fixed,  
+    basewidth       =   0.5em,
+}
+
+
+\title{LP \& QP Assignment}
+
+\author{Jiaxuan Zhang, Yiting Li \\
+$E1=9,E2=13,E3=5$}
+
+\date{07 October 2020}
+
+\def\allfiles{}
+
+\begin{document}
+    \maketitle
+
+    \tableofcontents
+
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0.3em}
+    
+    \newpage
+
+    \section{Question 1}
+    \input{Chapter/Q1.tex}
+
+    \section{Question 2}
+    \input{Chapter/Q2.tex}
+
+    \section{Question 3}
+    \input{Chapter/Q3.tex}
+
+    \section{Question 4}
+    \input{Chapter/Q4.tex}
+
+    \newpage
+
+    \addcontentsline{toc}{section}{MATLAB Code}
+
+    \section*{MATLAB Code}
+    \input{Appendix/appendix.tex}
+
+
+
+\end{document}
+

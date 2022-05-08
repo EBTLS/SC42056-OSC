@@ -1,0 +1,76 @@
+\ifx \allfiles \undefined
+
+\documentclass[titlepage,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{eurosym}
+\usepackage[a4paper]{geometry}
+
+
+
+\begin{document}
+
+\fi
+
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0.5em}
+
+
+    \subsection{Analysis}
+
+    In order to transform model to a discrete-time model, we need to use the following approximation:
+
+    \begin{equation}
+        \dot{T_{b,k}} = \frac{dT_{b,k}}{dt} \approx \frac{T_{b,k+1}-T_{b,k}}{\Delta t}
+    \end{equation}
+
+    Where $T_{b,k}$ represents the indoor temperature in the building at time step k.
+
+    The target equation has derivative on both sides, but according to Question 3, the derivate of $q_{solar,k}, q_{occ,k}, q_{ac,k}, q_{vent,k}$ are able to observed directly. Therefore, we only need to discretize the left side of the equation.
+
+    \subsection{Solution} \label{solution.Q2}
+
+    The process to obtain discrete-time model is shown as follows.
+
+    \begin{equation}
+        \begin{aligned}
+            \frac{T_{b,k+1}-T_{b,k}}{\Delta t} &=a_1 \dot{q_{solar,k}}+a_2[\dot{q_{occ,k}}+\dot{q_{ac,k}}-\dot{q_{vent,k}}]+a_3[T_{amb,k}-T_{b,k}] \\
+            \Rightarrow T_{b,k+1} &= \{a_1 \dot{q_{solar,k}}+a_2[\dot{q_{occ,k}}+\dot{q_{ac,k}}-\dot{q_{vent,k}}]+a_3[T_{amb,k}-T_{b,k}] \} \Delta t+T_{b,k} \\
+            \Rightarrow T_{b,k+1} &= \{a_1 \dot{q_{solar,k}}+a_2[\dot{q_{occ,k}}+\dot{q_{ac,k}}-\dot{q_{vent,k}}]+a_3T_{amb,k}\} \Delta t +(1-a_3 \Delta t)T_{b,k} \\              
+        \end{aligned}
+    \end{equation}
+
+    so,
+
+    \begin{equation}
+        \begin{aligned}
+            A &=1-a_3 \Delta t \\
+            B &=
+            \begin{bmatrix}
+                a_1 \Delta t & a_2 \Delta t & a_2 \Delta t & -a_2 \Delta t & a_3 \Delta t \\
+            \end{bmatrix}
+        \end{aligned}
+    \end{equation}
+    
+
+    \subsection{Answer}
+
+    From \ref{solution.Q2}, the answer is:
+    
+    \begin{equation}
+        \begin{aligned}
+            A &=1-a_3 \Delta t \\
+            B &=
+            \begin{bmatrix}
+                a_1 \Delta t & a_2 \Delta t & a_2 \Delta t & -a_2 \Delta t & a_3 \Delta t \\
+            \end{bmatrix}
+        \end{aligned}
+    \end{equation}
+
+
+\ifx \allfiles \undefined    
+\end{document}
+\fi
